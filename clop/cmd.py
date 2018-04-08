@@ -7,7 +7,6 @@ from clop import __version__
 from clop.translate import translate_file
 
 def translate(args):
-    print(args)
     if args.out:
         with open(args.out, "w") as fp:
             translate_file(args.file[0], fp)
