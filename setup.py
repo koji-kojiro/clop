@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
+from clop import __version__
 
 config = {
     'name': 'clop',
@@ -10,11 +11,10 @@ config = {
     'description': '',
     'long_description': open('README.rst', 'r').read(),
     'license': 'MIT',
-    'version': '0.0.1',
+    'version': __version__,
     'install_requires': [],
     'classifiers': [
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Development Status :: 1 - Planning",
@@ -22,7 +22,7 @@ config = {
     'packages': find_packages(),
     'entry_points': {
         'console_scripts':[
-            'clop = clop.main:main',
+            'clop = clop.cmd:main',
         ],
      }
 }
