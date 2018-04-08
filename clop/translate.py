@@ -2,12 +2,21 @@ import sys
 from .read import read
 from .syntax import functions, special_forms
 
-def parse_declaration(declartion):
+def convert_name(name):
+    if len(name) > 3:
+        if name.startswith("+") and name.endswith("+"):
+            name = name[1:-1].upper()
+        if len(name) > 3:
+            return name[0] + name[1:-1].replace("-", "_") + name[-1]
+    return name
+
+def parse_name(declartion):
     if ":" in declartion:
         specifier, identifier = declartion.split(":")
+        identifier = convert_name(identifier)
         return specifier.replace("-", " ") + " " +  identifier
     else:
-        return declartion
+        return convert_name(declartion)
 
 def call(function, *args):
     return "{}({})".format(function, ", ".join(args))
@@ -22,7 +31,7 @@ def sexp2c(sexp):
         else:
             return call(*list(map(sexp2c, sexp)))
     else:
-        return parse_declaration(sexp)
+        return parse_name(sexp)
 
 def translate_file(fname, dest=sys.stdout):
     with open(fname, "r") as fp:
