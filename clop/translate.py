@@ -1,3 +1,4 @@
+import sys
 from .read import read
 from .syntax import functions, special_forms
 
