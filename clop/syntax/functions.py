@@ -12,6 +12,12 @@ def comment(line):
 def continue_():
     return "continue"
 
+def declare(*declarations):
+    return "\n".join(declarations)
+
+def defvar(name, value=None):
+    return f"{name} = {value}" if value else name
+
 def include(header):
     return f"#include <{header}.h>"
 
@@ -26,6 +32,8 @@ functions = {
     "break": break_,
     "continue": continue_,
     "comment": comment,
+    "declare": declare,
+    "defvar": defvar,
     "include": include,
     "return": return_,
     "when": when,
