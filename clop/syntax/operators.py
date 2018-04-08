@@ -38,6 +38,6 @@ operators = {
     "and": binary_operator("&&"),
     "or": binary_operator("||"),
     "not": unary_operator("!"),
-    "inc": unary_operator("++"),
-    "dec": unary_operator("--"), 
+    "1+": unary_operator("++"),
+    "1-": unary_operator("--"), 
 }
