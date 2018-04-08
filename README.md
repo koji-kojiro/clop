@@ -1,3 +1,4 @@
+# Warning:WIP!
 # CLOP - C with a Lot of Parenthese
 
 CLOP is a s-expressions to C transpiler, written in Python3.
@@ -8,15 +9,16 @@ CLOP is a s-expressions to C transpiler, written in Python3.
 
 ## Installation
 
-1. clone this repo.
+First, clone this repo
 
 ```
 $ git clone https://github.com/koji-kojiro/clop.git
 ```
 
-2. run seup.py
+Then, run seup.py
 
 ```
+$ cd clop
 $ python setup.py install
 ```
 
@@ -77,7 +79,7 @@ b
 c
 ```
 
-More examples can be found [here](./examples).
+More examples can be found [here](./example).
 
 ## License
 CLOP is distributed under MIT License.
