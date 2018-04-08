@@ -1,5 +1,13 @@
 from .utils import block
 
+def cond(hook, clause, *clauses):
+    clause = list(map(hook, clause))
+    code = f"if ({clause[0]}) " + block(clause[1:])
+    for caluse in clauses:
+        clause = list(map(hook, caluse))
+        code += f"else if ({clause[0]}) " + block(clause[1:])
+    return code
+
 def defun(hook, declartion, args_list, *body):
     code = "{} ({})\n".format(hook(declartion), ", ".join(map(hook, args_list)))
     return code + block(map(hook, body))
@@ -36,6 +44,7 @@ def while_(hook, test, *body):
     return code + block(map(hook, body))
     
 special_forms = {
+    "cond": cond,
     "defun": defun,
     "defstruct": defstruct,
     "defunion": defunion,

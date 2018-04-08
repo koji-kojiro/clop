@@ -1,13 +1,13 @@
-c_binops = {
-    "+", "-", "*", "/", "%",
-    "==", "<", ">", "&&", "||",
-}
+c_binops = {"+", "-", ">>", "<<", "=",}
 
 def binary_operator(char):
     def operator_func(*terms):
         terms = list(terms)
         for n, term in enumerate(terms):
+            if term.startswith("("):
+                continue
             for op in c_binops:
+                op = f" {op} "
                 if op in term:
                     terms[n] = f"({term})"
         return f" {char} ".join(terms)
@@ -34,10 +34,7 @@ operators = {
     "logior": binary_operator("|"),
     "logxor": binary_operator("^"),
     "ash": binary_operator(">>"),
-    "set": binary_operator("="),
     "and": binary_operator("&&"),
     "or": binary_operator("||"),
     "not": unary_operator("!"),
-    "1+": unary_operator("++"),
-    "1-": unary_operator("--"), 
 }
