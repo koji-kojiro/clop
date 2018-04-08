@@ -26,7 +26,7 @@ def run(args):
         subprocess.check_output(cmd)
         subprocess.check_call(["./clop-run.out"])
 
-parser = argparse.ArgumentParser(usage="%(prog)s [-h|-v] [commands] [options] file")
+parser = argparse.ArgumentParser(usage="%(prog)s [-h|-v] [command] [options] file")
 parser.add_argument("-v", "--version",
                     action="store_true",
                     help="show version info and exit")
