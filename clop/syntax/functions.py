@@ -1,7 +1,13 @@
 from .utils import block
 
+def aref(array, subscript):
+    return f"{array}[{subscript}]"
+
 def break_():
     return "break"
+
+def comment(line):
+    return f"//{line}"
 
 def continue_():
     return "continue"
@@ -15,10 +21,8 @@ def return_(value):
 def when(test, *body):
     return f"if ({test}) " + block(body)
 
-def comment(line):
-    return f"//{line}"
-
 functions = {
+    "aref": aref,
     "break": break_,
     "continue": continue_,
     "comment": comment,
