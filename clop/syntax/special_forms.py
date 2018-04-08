@@ -15,7 +15,6 @@ def defunion(hook, name, members):
 def defenum(hook, name, members):
     code = f"typedef enum {name}"
     return code + "{{\n{}\n}} {}".format(",\n".join(map("  ".__add__, members)), name)
-    
 
 def for_(hook, forms, *body):
     for n in range(3 - len(forms)):
@@ -36,7 +35,6 @@ def while_(hook, test, *body):
     code = "while ({}) ".format(hook(test))
     return code + block(map(hook, body))
     
-
 special_forms = {
     "defun": defun,
     "defstruct": defstruct,
