@@ -77,6 +77,8 @@ b
 c
 ```
 
+More examples can be found [here](./examples).
+
 ## License
 CLOP is distributed under MIT License.
 
