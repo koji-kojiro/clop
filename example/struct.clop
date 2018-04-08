@@ -1,0 +1,15 @@
+(include stdio)
+
+;; struct person
+(defstruct person
+  (char*:name int:age))
+
+;; main function 
+(defun int:main (int:argc char*:argv[])
+  (let ((person:kojiro)
+        (kojiro.name "Kojiro Tani")
+        (kojiro.age 25))
+    (printf "My name is %s.\n" kojiro.name)
+    (printf "I am %d years old.\n" kojiro.age))
+  (return 0))
+

@@ -1,0 +1,14 @@
+(include stdio)
+
+;; enum week
+(defenum week
+  (Mon Tue Wed Thu Fri Sat Sun))
+
+;; main function 
+(defun int:main (int:argc char*:argv[])
+  (let ((week:mon Mon)
+        (week:fri Fri))
+    (printf "The value of 'Mon' is %d.\n" mon)
+    (printf "The value of 'Fri' is %d.\n" fri))
+  (return 0))
+
