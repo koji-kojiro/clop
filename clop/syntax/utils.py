@@ -1,5 +1,7 @@
 def block(statements):
     statements = list(statements)
+    if not statements:
+        return "\n  ;"
     code = "\n"
     for statement in statements:
         for line in filter(len, statement.split("\n")):
