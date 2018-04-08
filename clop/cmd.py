@@ -7,24 +7,25 @@ from clop import __version__
 from clop.translate import translate_file
 
 def translate(args):
-    if args.o:
-        with open(args.o, "w") as fp:
+    print(args)
+    if args.out:
+        with open(args.out, "w") as fp:
             translate_file(args.file[0], fp)
     else:
         translate_file(args.file[0])
 
 def run(args):
-    fname = args.file[0]
-    cc = args.cc[0]
     cwd = os.path.abspath("./")
     with tempfile.TemporaryDirectory(prefix="clop-run", dir=cwd) as dstdir:
-        cfname = os.path.join(dstdir, "a.c")
-        with open(cfname, "w") as fp:
-            translate_file(fname, fp)
+        with open(os.path.join(dstdir, "a.c"), "w") as fp:
+            translate_file(args.file[0], fp)
         os.chdir(dstdir)
-        cmd = [cc, "a.c", "-o", "clop-run.out"]
+        cmd = [args.cc[0], "a.c", "-o", "clop-run.out"]
         subprocess.check_output(cmd)
-        subprocess.check_call(["./clop-run.out"])
+        cmd = ["./clop-run.out"]
+        if args.args:
+            cmd.extend(args.args[0].split(" "))
+        subprocess.check_call(cmd)
 
 parser = argparse.ArgumentParser(usage="%(prog)s [-h|-v] [command] [options] file")
 parser.add_argument("-v", "--version",
@@ -58,6 +59,12 @@ parser_run.add_argument("--cc",
                         default=["cc"],
                         help="c compiler to be used (default: `cc`)",
                         metavar="<cc>")
+parser_run.add_argument("--args",
+                        action="store",
+                        nargs=1,
+                        help="arguments to be passed to the program",
+                        metavar="<args>")
+
 parser_run.set_defaults(func=run)
 
 def main():
