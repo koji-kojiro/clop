@@ -85,12 +85,21 @@ def read_string(stream):
         char = read_char(stream)
     return f"\"{string}\""
 
+def read_character(stream):
+    string = ""
+    char = read_char(stream)
+    while char is not "'":
+        string += char
+        char = read_char(stream)
+    return f"'{string}'"
+
 readtable = {
     "(": read_list,
     ")": right_paren_reader,
     ";": read_comment,
     "\n": read_emptyline,
     "\"": read_string,
+    "'": read_character,
 }
 
 delimiters = string.whitespace
