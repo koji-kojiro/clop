@@ -1,0 +1,13 @@
+(include stdio)
+
+(defun int:main (void)
+  (let ((int:i 0))
+    (while (< (incf i) 8)
+      (let ((int:j 0))
+        (while (< (incf j) 8)
+          (let ((int:bg (+ i 29))
+                (int:fg (+ j 39)))
+            (printf "\033[%d;%dm %d;%d; \033[0m" bg fg bg fg)))
+        (printf "\n"))))
+  (return 0))
+       

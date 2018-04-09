@@ -44,9 +44,9 @@ for more detailed information, try `clop [command] --help`.
 (include stdio)
 
 (defun int:main (int:argc char*:argv[])
-  (let ((int:i 1))
-    (for (i (< i argc) (1+ i))
-         (printf "%s\n" (aref argv i))))
+  (let ((int:i 0))
+    (while (< (incf i) argc)
+      (printf "%s\n" (aref argv i))))
   (return 0))
 ```
 
@@ -62,8 +62,8 @@ $ clop translate src.clop -o dst.c
 int main (int argc, char* argv[])
 {
   {
-    int i = 1;
-    for (i; i < argc; ++i) 
+    int i = 0;
+    while (++i < argc) 
       printf("%s\n", argv[i]);
   }
   return 0;
