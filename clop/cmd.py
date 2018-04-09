@@ -74,6 +74,6 @@ def main():
         try:
             args.func(args)
         except Exception as e:
-            sys.exit(e)
+            sys.exit("\x1b[31m{}: {}\x1b[0m".format(type(e).__name__, e))
     else:
         parse.print_help()
