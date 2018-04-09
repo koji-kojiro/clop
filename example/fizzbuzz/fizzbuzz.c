@@ -1,4 +1,5 @@
 #include <stdio.h>
+
 void fizzbuzz (int);
 
 void fizzbuzz (int n)

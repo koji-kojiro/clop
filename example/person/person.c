@@ -28,10 +28,7 @@ person* init_person (char* name, int age, gender gender)
 void introduce_person (person* person)
 {
   printf("This is %s.\n", person->name);
-  if (person->gender == male) 
-    printf("He ");
-  else 
-    printf("She ");
+  person->gender == male? (printf("He ")) : (printf("She "));
   printf("is %d years old.\n", person->age);
 }
 
