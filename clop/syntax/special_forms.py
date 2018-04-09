@@ -54,7 +54,7 @@ def let(hook, definitions, *body):
             body = (f"{definition[0]} = {definition[1]}",) + body
         else:
             body = (f"{definition[0]}", ) + body
-    return block(map(hook, body))
+    return "({})".format(block(map(hook, body)))
 
 def while_(hook, test, *body):
     code = "while ({}) ".format(hook(test))
