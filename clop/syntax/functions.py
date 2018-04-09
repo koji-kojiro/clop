@@ -30,9 +30,9 @@ def defvar(name, value=None):
     return f"{name} = {value}" if value else name
 
 def if_(test, trueform, falseform=None):
-    code = f"if ({test}) \n  {trueform}"
+    code = f"if ({test}) {trueform}"
     if falseform:
-        code += f"\nelse \n  {falseform}"
+        code += f" else {falseform}"
     return code
 
 def incf(place, value=1):
