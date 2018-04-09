@@ -1,6 +1,6 @@
 import sys
 from .read import read
-from .syntax import functions, special_forms
+from .syntax import functions, special_forms, implicit_forms
 
 def convert_name(name):
     if len(name) > 3:
@@ -40,6 +40,15 @@ def translate_file(fname, dest=sys.stdout):
         while(form):
             toplevel_forms.append(sexp2c(form))
             form = read(fp)
+        for n, form in enumerate(toplevel_forms):
+            if form[0] != "#":
+                for iform in implicit_forms:
+                    toplevel_forms.insert(n, iform)
+                break
+        else:
+            if implicit_forms:
+                implicit_forms.insert(0, "\n")
+            toplevel_forms.extend(implicit_forms)
         code = ""
         for form in toplevel_forms:
             if form:

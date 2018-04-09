@@ -1,4 +1,5 @@
-from .utils import block
+from string import ascii_letters, digits
+from .utils import block, implicit_forms
 
 def cond(hook, clause, *clauses):
     clause = list(map(hook, clause))
@@ -8,8 +9,21 @@ def cond(hook, clause, *clauses):
         code += f"else if ({clause[0]}) " + block(clause[1:])
     return code
 
-def defun(hook, declartion, args_list, *body):
-    code = "{} ({})\n".format(hook(declartion), ", ".join(map(hook, args_list)))
+def defun(hook, declaration, args_list, *body):
+    declaration = hook(declaration)
+    args_list = list(map(hook, args_list))
+    code = "{} ({})\n".format(declaration, ", ".join(args_list))
+    if len(declaration) > 3 and declaration[-4:] != "main":
+        ptypes = []
+        for arg in args_list:
+            ptype = " ".join(arg.split()[:-1])
+            for c in arg.split()[-1]:
+                if c not in ascii_letters + digits + "_":
+                    ptype += c
+            ptypes.append(ptype)
+        implicit_forms.append("{} ({})".format(declaration, ", ".join(ptypes)))
+    if len(body) == 1:
+        body = ("\n",) + body
     return code + block(map(hook, body))
 
 def defstruct(hook, name, members):

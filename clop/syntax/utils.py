@@ -12,4 +12,4 @@ def block(statements):
                 code += ";\n"
     return "{" + code + "}" if len(statements) > 1 else code
 
-
+implicit_forms = []
