@@ -29,11 +29,8 @@ def defconstant(name, value):
 def defvar(name, value=None):
     return f"{name} = {value}" if value else name
 
-def if_(test, trueform, falseform=None):
-    code = f"if ({test}) {trueform}"
-    if falseform:
-        code += f" else {falseform}"
-    return code
+def if_(test, trueform, falseform):
+    return f"{test}? ({trueform}) : ({falseform})"
 
 def incf(place, value=1):
     if value == 1:
@@ -44,7 +41,7 @@ def include(header):
     return f"#include <{header}.h>"
 
 def progn(*forms):
-    return block(forms)
+    return "({})".format(block(forms))
 
 def return_(value):
     return f"return {value}" 
