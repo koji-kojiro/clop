@@ -1,11 +1,13 @@
 # Warning:WIP!
-# CLOP - C with a Lot of Parenthese
 
-CLOP is a s-expressions to C transpiler, written in Python3.
+# CLOP - C with a Lot Of Parentheses
+
+CLOP is a s-expressions to C transpiler, written in Python3. It is not what provides a full LISP environment on the top of C, but just a bunch of syntax sugar.
 
 ## Requirements
 
 - Python3.5+
+- gcc (or any C compiler)
 
 ## Installation
 
@@ -53,7 +55,7 @@ for more detailed information, try `clop [command] --help`.
 The code above is translated as follows:
 
 ```
-$ clop translate src.clop -o dst.c
+$ clop translate src.clop --out dst.c
 ```
 
 ```c
@@ -61,11 +63,11 @@ $ clop translate src.clop -o dst.c
 
 int main (int argc, char* argv[])
 {
-  {
+  ({
     int i = 0;
     while (++i < argc) 
       printf("%s\n", argv[i]);
-  }
+  });
   return 0;
 }
 ```
