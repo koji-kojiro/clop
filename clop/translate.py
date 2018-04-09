@@ -1,5 +1,6 @@
 import re
 import sys
+import string
 from .read import read
 from .syntax import functions, special_forms, implicit_forms
 
@@ -53,11 +54,17 @@ def translate_file(fname, dest=sys.stdout):
                 implicit_forms.insert(0, "\n")
             toplevel_forms.extend(implicit_forms)
         code = ""
+        extra_lines = 0
         for form in toplevel_forms:
+            if all(map(lambda _: _ in string.whitespace, form)):
+                extra_lines += 1
+            else:
+                extra_lines = 0
             if form:
                 if form[-1] in " {};" or form[0] in "#/":
                     form += "\n"
                 elif form is not "\n":
                     form += ";\n"
-            code += form
+            if extra_lines < 2:        
+                code += form
         dest.write(code)

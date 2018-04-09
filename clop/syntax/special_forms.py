@@ -21,22 +21,25 @@ def defun(hook, declaration, args_list, *body):
                 if c not in ascii_letters + digits + "_":
                     ptype += c
             ptypes.append(ptype)
-        implicit_forms.append("{} ({})".format(declaration, ", ".join(ptypes)))
+        implicit_forms.insert(0, "\n{} ({})".format(declaration, ", ".join(ptypes)))
     if len(body) == 1:
         body = ("\n",) + body
     return code + block(map(hook, body))
 
 def defstruct(hook, name, members):
-    code = f"typedef struct {name} "
-    return code + block(map(hook, members)) + f" {name}"
+    code = f"\ntypedef struct {name} "
+    implicit_forms.insert(0, code + block(map(hook, members)) + f" {name}")
+    return ""
 
 def defunion(hook, name, members):
-    code = f"typedef union {name} "
-    return code + block(map(hook, members)) + f" {name}"
+    code = f"\ntypedef union {name} "
+    implicit_forms.insert(0, code + block(map(hook, members)) + f" {name}")
+    return ""
 
 def defenum(hook, name, members):
-    code = f"typedef enum {name}"
-    return code + "{{\n{}\n}} {}".format(",\n".join(map("  ".__add__, members)), name)
+    code = f"\ntypedef enum {name}"
+    implicit_forms.insert(0, code + "{{\n{}\n}} {}".format(",\n".join(map("  ".__add__, members)), name))
+    return ""
 
 def for_(hook, forms, *body):
     for n in range(3 - len(forms)):
