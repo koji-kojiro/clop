@@ -59,10 +59,10 @@ def when(test, *body):
     return f"if ({test}) " + block(body)
 
 def one_plus(variable):
-    return f"{variable + 1}"
+    return f"{variable} + 1"
 
 def one_minus(variable):
-    return f"{variable - 1}"
+    return f"{variable} - 1"
 
 functions = {
     "aref": aref,
