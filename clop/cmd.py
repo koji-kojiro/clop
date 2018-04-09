@@ -8,7 +8,7 @@ from clop.translate import translate_file
 
 def translate(args):
     if args.out:
-        with open(args.out, "w") as fp:
+        with open(args.out[0], "w") as fp:
             translate_file(args.file[0], fp)
     else:
         translate_file(args.file[0])
