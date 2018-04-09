@@ -1,13 +1,16 @@
+import re
 import sys
 from .read import read
 from .syntax import functions, special_forms, implicit_forms
+
+buitin_names = [j for i in (functions, special_forms) for j in i.keys()]
 
 def convert_name(name):
     if len(name) > 3:
         if name.startswith("+") and name.endswith("+"):
             name = name[1:-1].upper()
-        if len(name) > 3:
-            return name[0] + name[1:-1].replace("-", "_") + name[-1]
+        if len(name) > 3 and name not in buitin_names:
+            name = re.sub("-(?!\>)", "_", name)
     return name
 
 def parse_name(declartion):
