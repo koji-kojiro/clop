@@ -31,6 +31,48 @@ def defstruct(hook, name, members):
     implicit_forms.insert(0, code + block(map(hook, members)) + f" {name}")
     return ""
 
+def parse_macro_args(argslist):
+    args_map = dict()
+    for n, arg in enumerate(argslist):
+        if isinstance(arg, list):
+            for m, a in enumerate(arg):
+                args_map.update({a: f"args[{n}][{m}]"})
+        elif arg == "&body":
+            args_map.update({argslist[int(n) + 1]: f"args[{n}:]"})
+            break
+        else:
+            args_map.update({arg: f"args[{n}]"})
+    return args_map
+
+def expand_macro_body(body, args, args_map):
+    expanded = []
+    for elm in body:
+        if isinstance(elm, str):
+            for k, v in args_map.items():
+                value = eval(v)
+                if isinstance(value, str):
+                    elm = elm.replace("," + k, value)
+                else:
+                    if elm == "," + k:
+                        elm = list(value)
+                    elif elm == ",@" + k:
+                        elm = value
+            if isinstance(elm, str) or isinstance(elm, list):
+                expanded.append(elm)
+            else:
+                expanded.extend(elm)
+        else:
+            expanded.append(expand_macro_body(elm, args, args_map))
+    return expanded
+
+def defsyntax(hook, name, argslist, body):
+    args_map = parse_macro_args(argslist)
+    def macro_function(hook, *args):
+        expanded = hook(expand_macro_body(body, args, args_map))
+        return expanded
+    special_forms.update({name: macro_function})
+    return "\n"
+
 def defunion(hook, name, members):
     code = f"\ntypedef union {name} "
     implicit_forms.insert(0, code + block(map(hook, members)) + f" {name}")
@@ -64,6 +106,7 @@ special_forms = {
     "cond": cond,
     "defun": defun,
     "defstruct": defstruct,
+    "defsyntax": defsyntax,
     "defunion": defunion,
     "defenum": defenum,
     "for": for_,
