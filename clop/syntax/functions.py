@@ -53,7 +53,7 @@ def setf(*pairs):
     return "\n".join(code)
 
 def when(test, *body):
-    return f"if ({test}) " + block(body)
+    return "({{{}}})".format(f"if ({test}) " + block(body))
 
 def one_plus(variable):
     return f"{variable} + 1"
