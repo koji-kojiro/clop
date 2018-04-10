@@ -14,13 +14,14 @@ def convert_name(name):
             name = re.sub("-(?!\>)", "_", name)
     return name
 
-def parse_name(declartion):
-    if ":" in declartion:
-        specifier, identifier = declartion.split(":")
-        identifier = convert_name(identifier)
-        return specifier.replace("-", " ") + " " +  identifier
+def parse_name(name):
+    if ":" in name:
+        name = name.split(":")
+        identifier = convert_name(name[-1])
+        specifier = " ".join(name[:-1])
+        return specifier + " " +  identifier
     else:
-        return convert_name(declartion)
+        return convert_name(name)
 
 def call(function, *args):
     return "{}({})".format(function, ", ".join(args))
