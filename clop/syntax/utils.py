@@ -13,3 +13,4 @@ def block(statements):
     return "{" + code + "}" if len(statements) > 1 else code
 
 implicit_forms = []
+load_path = []

@@ -1,8 +1,9 @@
+import os
 import re
 import sys
 import string
 from .read import read
-from .syntax import functions, special_forms, implicit_forms
+from .syntax import functions, special_forms, implicit_forms, load_path
 
 buitin_names = [j for i in (functions, special_forms) for j in i.keys()]
 
@@ -39,6 +40,7 @@ def sexp2c(sexp):
         return parse_name(sexp)
 
 def translate_file(fname, dest=sys.stdout):
+    load_path.append(os.path.abspath(os.path.dirname(fname)))
     with open(fname, "r") as fp:
         form = read(fp)
         toplevel_forms = []

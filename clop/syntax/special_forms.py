@@ -1,5 +1,7 @@
+import os
 from string import ascii_letters, digits
-from .utils import block, implicit_forms
+from clop.read import read
+from .utils import block, implicit_forms, load_path
 
 def cond(hook, clause, *clauses):
     clause = list(map(hook, clause))
@@ -98,6 +100,47 @@ def let(hook, definitions, *body):
             body = (f"{definition[0]}", ) + body
     return "({})".format(block(map(hook, body)))
 
+def extract_macro_definitions(sexp):
+    definitions = []
+    for elm in sexp:
+        if isinstance(elm, str):
+            if elm == "defsyntax":
+                definitions.append(sexp)
+                break
+        else:
+            definitions.extend(extract_macro_definitions(elm))
+    return list(filter(len, definitions))
+
+known_modules = []
+def require(hook, module):
+    if module in known_modules:
+        return "\n"
+    known_modules.append(module)
+    module_dir = ""
+    if "." in module:
+        module_dir = "/".join(module.split(".")[:-1])
+        module = module.split(".")[-1]
+    for path in load_path:
+        try:
+            path = os.path.join(path, module_dir)
+            if module + ".clop" in os.listdir(path):
+                fname = os.path.join(path, module + ".clop")
+                break
+        except OSError:
+            pass
+    else:
+        raise ImportError(f"No such file:{module}.clop")
+    forms = []
+    with open(fname, "r") as fp:
+        form = read(fp)
+        while(form):
+            forms.append(form)
+            form = read(fp)
+    forms = extract_macro_definitions(forms)
+    for form in forms:
+        hook(form)
+    return "\n"
+
 def while_(hook, test, *body):
     code = "while ({}) ".format(hook(test))
     return code + block(map(hook, body))
@@ -111,5 +154,6 @@ special_forms = {
     "defenum": defenum,
     "for": for_,
     "let": let,
+    "require": require,
     "while": while_,
 }
