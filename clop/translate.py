@@ -16,7 +16,9 @@ def convert_name(name):
     return name
 
 def parse_name(name):
-    if ":" in name:
+    if name.startswith("\"") or name.startswith(":"):
+        return name
+    elif ":" in name:
         name = name.split(":")
         identifier = convert_name(name[-1])
         specifier = " ".join(name[:-1])
@@ -48,7 +50,7 @@ def translate_file(fname, dest=sys.stdout):
             toplevel_forms.append(sexp2c(form))
             form = read(fp)
         for n, form in enumerate(toplevel_forms):
-            if form[0] != "#":
+            if form[0] not in "/":
                 for iform in implicit_forms:
                     toplevel_forms.insert(n, iform)
                 break

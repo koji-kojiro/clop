@@ -33,44 +33,83 @@ def defstruct(hook, name, members):
     implicit_forms.insert(0, code + block(map(hook, members)) + f" {name}")
     return ""
 
-def parse_macro_args(argslist):
-    args_map = dict()
-    for n, arg in enumerate(argslist):
-        if isinstance(arg, list):
-            for m, a in enumerate(arg):
-                args_map.update({a: f"args[{n}][{m}]"})
-        elif arg == "&body":
-            args_map.update({argslist[int(n) + 1]: f"args[{n}:]"})
+def parse_macro_args(args, argslist):
+    argslist = argslist[:]
+    key_pos = [n for n, a in enumerate(args) if str(a).startswith(":")]
+    given_keys = {args[n][1:]: args[n + 1] for n in key_pos}
+    args = [a for n, a in enumerate(args) if not n in key_pos]
+ 
+    args_map = {}
+    optional = False
+    keyword = False
+    
+    while(argslist):
+        spec = argslist.pop(0)
+        if isinstance(spec, list):
+            if optional:
+                name = spec[0]
+                value = args.pop(0) if args else spec[1]
+            elif keyword:
+                name = spec[0]
+                if name in given_keys:
+                    value = given_keys.pop(name)
+                else:
+                    value = spec[1]
+            else:
+                sub_map = parse_macro_args(args.pop(0), spec)
+                args_map.update(sub_map)
+                continue
+        elif spec == "&optional":
+            optional, keyword = True, False
+            continue
+        elif spec == "&key":
+            optional, keyword = False, True
+            continue
+        elif spec in {"&rest", "&body"}:
+            args_map.update({argslist.pop(0): tuple(args)})
             break
         else:
-            args_map.update({arg: f"args[{n}]"})
+            name = spec
+            if optional:
+                value = args.pop(0) if args else 0
+            elif keyword:
+                continue
+            else:
+                value = args.pop(0)
+        args_map.update({name: value})
     return args_map
 
-def expand_macro_body(body, args, args_map):
+def expand_macro_body(body, args_map):
     expanded = []
     for elm in body:
         if isinstance(elm, str):
             for k, v in args_map.items():
-                value = eval(v)
-                if isinstance(value, str):
-                    elm = elm.replace("," + k, value)
+                if isinstance(v, str):
+                    elm = elm.replace("," + k, v)
                 else:
                     if elm == "," + k:
-                        elm = list(value)
+                        elm = list(v)
+                        break
                     elif elm == ",@" + k:
-                        elm = value
+                        elm = v
+                        break
             if isinstance(elm, str) or isinstance(elm, list):
                 expanded.append(elm)
             else:
                 expanded.extend(elm)
         else:
-            expanded.append(expand_macro_body(elm, args, args_map))
+            expanded.append(expand_macro_body(elm, args_map))
     return expanded
 
 def defsyntax(hook, name, argslist, body):
-    args_map = parse_macro_args(argslist)
     def macro_function(hook, *args):
-        expanded = hook(expand_macro_body(body, args, args_map))
+        try:
+            args_map = parse_macro_args(args, argslist)
+        except IndexError:
+            import traceback
+            traceback.print_exc()
+            raise ValueError(f"{name} expected even more arguments")
+        expanded = hook(expand_macro_body(body, args_map))
         return expanded
     special_forms.update({name: macro_function})
     return "\n"
@@ -104,7 +143,7 @@ def extract_macro_definitions(sexp):
     definitions = []
     for elm in sexp:
         if isinstance(elm, str):
-            if elm == "defsyntax":
+            if elm in ("defsyntax", "include"):
                 definitions.append(sexp)
                 break
         else:
