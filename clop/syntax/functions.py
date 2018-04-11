@@ -1,4 +1,4 @@
-from .utils import block
+from .utils import block, implicit_forms
 
 def aref(array, subscript):
     return f"{array}[{subscript}]"
@@ -37,8 +37,12 @@ def incf(place, value=1):
         return f"++{place}"
     return f"{place} += {value}"
 
+known_headers = []
 def include(header):
-    return f"#include <{header}.h>"
+    if not header in known_headers:
+        implicit_forms.insert(0, f"#include <{header}.h>")
+        known_headers.append(header)
+    return "\n"
 
 def progn(*forms):
     return "({})".format(block(forms))
