@@ -9,9 +9,6 @@ def break_():
 def cast(obj, rettype):
     return f"({rettype})obj"
 
-def comment(line):
-    return f"//{line}"
-
 def continue_():
     return "continue"
 
@@ -70,7 +67,6 @@ functions = {
     "break": break_,
     "cast": cast,
     "continue": continue_,
-    "comment": comment,
     "decf": decf,
     "declare": declare,
     "defvar": defvar,

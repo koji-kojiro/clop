@@ -68,7 +68,7 @@ def read_comment(stream):
             line += char
         read_char(stream)
         char = peek_char(stream)
-    return ["comment", line]
+    return "//" + line
 
 def read_emptyline(stream):
     char = peek_char(stream)

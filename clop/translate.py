@@ -16,7 +16,7 @@ def convert_name(name):
     return name
 
 def parse_name(name):
-    if name.startswith("\"") or name.startswith(":"):
+    if name[0] in ":/\"\'":
         return name
     elif ":" in name:
         name = name.split(":")
