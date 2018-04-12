@@ -1,7 +1,7 @@
 import os
 from string import ascii_letters, digits
 from clop.read import read
-from .utils import block, implicit_forms, load_path
+from .misc import block, implicit_forms, load_path
 
 def cond(hook, clause, *clauses):
     clause = list(map(hook, clause))
