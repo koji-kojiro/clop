@@ -83,16 +83,17 @@ def expand_macro_body(body, args_map):
     expanded = []
     for elm in body:
         if isinstance(elm, str):
-            for k, v in args_map.items():
-                if isinstance(v, str):
-                    elm = elm.replace("," + k, v)
-                else:
-                    if elm == "," + k:
-                        elm = list(v)
-                        break
-                    elif elm == ",@" + k:
-                        elm = v
-                        break
+            if not elm[0] in "\"'":
+                for name, value in args_map.items():
+                    if isinstance(value, str):
+                        elm = elm.replace("," + name, value)
+                    else:
+                        if elm == "," + name:
+                            elm = list(value)
+                            break
+                        elif elm == ",@" + name:
+                            elm = value
+                            break
             if isinstance(elm, str) or isinstance(elm, list):
                 expanded.append(elm)
             else:
