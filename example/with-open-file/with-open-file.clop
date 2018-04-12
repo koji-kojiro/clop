@@ -1,0 +1,12 @@
+(include stdio)
+
+(defsyntax null (ptr)
+  (eq ,ptr +null+))
+
+(defsyntax with-open-file ((stream filespec &optional (mode "w")) &body body)
+  (let ((FILE*:,stream (fopen ,filespec ,mode)))
+    (if (null ,stream)
+      (perror "Failed to open file")
+      (progn
+        ,@body
+        (fclose ,stream)))))

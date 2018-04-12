@@ -1,0 +1,7 @@
+(include stdio)
+(require with-open-file)
+
+(defun int:main (void)
+  (with-open-file (fd "hello.txt")
+    (fprintf fd "Hello, world!\n"))
+  (return 0))
