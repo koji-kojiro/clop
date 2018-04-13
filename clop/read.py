@@ -93,6 +93,12 @@ def read_character(stream):
         char = read_char(stream)
     return f"'{string}'"
 
+def ignore_line(stream):
+    char = peek_char(stream)
+    while char is not "\n":
+        char = read_char(stream)
+    return read(stream)
+
 readtable = {
     "(": read_list,
     ")": right_paren_reader,
@@ -100,6 +106,7 @@ readtable = {
     "\n": read_emptyline,
     "\"": read_string,
     "'": read_character,
+    "#": ignore_line,
 }
 
 delimiters = string.whitespace
